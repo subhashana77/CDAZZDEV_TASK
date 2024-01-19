@@ -1,10 +1,13 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {axios} from "axios";
+import {toast} from "react-hot-toast";
 
 export default function SignupPage() {
+
+    const router = useRouter();
 
     const [user, setUser] = React.useState({
         email: "",
@@ -12,9 +15,28 @@ export default function SignupPage() {
         username: "",
     });
 
-    const onSignup = async () => {
+    const [buttonDisabled, setButtonDisabled] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
+    const onSignup = async () => {
+        try {
+
+        } catch (error) {
+            console.log("Signup failed", error.message);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
     }
+
+    useEffect(() => {
+        if (user.email.length > 0 && user.password.length > 0 && user.username.length > 0) {
+            setButtonDisabled(false);
+        } else {
+            setButtonDisabled(true);
+        }
+
+    }, [user]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen isolate px-6 py-18 sm:py-26 lg:px-8">
@@ -82,9 +104,10 @@ export default function SignupPage() {
                         onClick={onSignup}
                         type="submit"
                         className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                        Register Now
+                        {buttonDisabled ? "Complete Required Fields" : "Register Now"}
                     </button>
                 </div>
+                <span>{loading ? "Processing..." : ""}</span>
                 <div className="mt-7 text-center">
                     <label htmlFor="company" className="block text-sm font-semibold leading-6 text-white">
                         Already Signup? Visit on <a href="/login" className="font-semibold text-indigo-600"> Login Page </a>
