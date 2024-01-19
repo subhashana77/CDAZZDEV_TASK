@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
-import {axios} from "axios";
+import axios from "axios";
 import {toast} from "react-hot-toast";
 
 export default function SignupPage() {
@@ -20,7 +20,10 @@ export default function SignupPage() {
 
     const onSignup = async () => {
         try {
-
+            setLoading(true);
+            const response = await axios.post("/api/users/signup", user);
+            console.log("Signup Success", response.data);
+            router.push("/login")
         } catch (error) {
             console.log("Signup failed", error.message);
             toast.error(error.message);
@@ -40,7 +43,7 @@ export default function SignupPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen isolate px-6 py-18 sm:py-26 lg:px-8">
-            <form action="#" method="POST" className="mx-auto mt-16 mb-16 max-w-xl sm:mt-15">
+            <form action="#" className="mx-auto mt-16 mb-16 max-w-xl sm:mt-15">
                 <div className="mx-auto max-w-2xl text-center mb-5">
                     <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:px-20">
                         CSAZZDEV SIGNUP
